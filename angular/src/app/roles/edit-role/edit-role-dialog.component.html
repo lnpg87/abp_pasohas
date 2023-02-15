@@ -1,0 +1,50 @@
+<form autocomplete="off" #editRoleForm="ngForm" (ngSubmit)="save()">
+<p-tabView orientation="left">
+    <p-tabPanel header="Rol" class="line-height-3 m-0">
+            <div class="p-fluid grid formgrid">
+                <div class="field col-12 md:col-6">
+                    <label for="basic">Nombre</label>
+                    <input pInputText type="text" class="form-control" name="name" id="name" required minlength="2" maxlength="32" [(ngModel)]="role.name" #nameModel="ngModel" #nameEl />
+                </div>
+                <div class="field col-12 md:col-6">
+                    <label for="basic">Nombre para Mostrar</label>
+                    <input
+                      pInputText
+                      type="text"
+                      class="form-control"
+                      name="displayName"
+                      id="displayName"
+                      required
+                      minlength="2"
+                      maxlength="32"
+                      [(ngModel)]="role.displayName"
+                      #displayNameModel="ngModel"
+                      #displayNameEl/>
+                  </div>
+                  <div class="field col-12 md:col-12">
+                    <textarea
+                        pInputTextarea
+                        type="text"
+                        class="form-control"
+                        name="description"
+                        id="description"
+                        [(ngModel)]="role.description">
+                    </textarea>
+                  </div>
+            </div>
+
+
+
+
+    </p-tabPanel>
+    <p-tabPanel header="Permisos">
+        <app-permission-tree [roleStatic]="role.isStatic" #permissionTree></app-permission-tree>
+    </p-tabPanel>
+
+    <div class="align-to-end">
+                <button pButton pRipple type="button" label="Guardar" class="p-button-outlined p-button-success" (click)="save()" [disabled]="!editRoleForm.form.valid || saving"></button>
+                <button pButton pRipple type="button" label="Salir" class="p-button-outlined p-button-danger" (click)="bsModalRef.close()" [disabled]="saving"></button>
+            </div>
+</p-tabView>
+
+</form>
