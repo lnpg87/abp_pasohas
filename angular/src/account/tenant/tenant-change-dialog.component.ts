@@ -7,6 +7,7 @@ import {
   IsTenantAvailableInput,
   IsTenantAvailableOutput
 } from '@shared/service-proxies/service-proxies';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
   templateUrl: './tenant-change-dialog.component.html'

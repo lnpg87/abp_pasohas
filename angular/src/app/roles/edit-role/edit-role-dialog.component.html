@@ -38,7 +38,7 @@
 
     </p-tabPanel>
     <p-tabPanel header="Permisos">
-        <app-permission-tree [roleStatic]="role.isStatic" #permissionTree></app-permission-tree>
+        <app-permission-tree [roleStatic]="!role.isStatic" #permissionTree></app-permission-tree>
     </p-tabPanel>
 
     <div class="align-to-end">

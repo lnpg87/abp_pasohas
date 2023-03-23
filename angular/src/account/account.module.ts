@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientJsonpModule } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
-import { ModalModule } from 'ngx-bootstrap/modal';
 import { AccountRoutingModule } from './account-routing.module';
 import { ServiceProxyModule } from '@shared/service-proxies/service-proxy.module';
 import { SharedModule } from '@shared/shared.module';
@@ -31,7 +30,6 @@ import { ButtonModule } from 'primeng/button';
         SharedModule,
         ServiceProxyModule,
         AccountRoutingModule,
-        ModalModule.forChild(),
         PasswordModule,
         ButtonModule,
         CheckboxModule,

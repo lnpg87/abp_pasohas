@@ -3,11 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { CollapseModule } from 'ngx-bootstrap/collapse';
-import { TabsModule } from 'ngx-bootstrap/tabs';
-
 import { AbpHttpInterceptor } from 'abp-ng2-module';
 
 import { SharedModule } from '@shared/shared.module';
@@ -35,10 +30,6 @@ export function getCurrentLanguage(): string {
     BrowserAnimationsModule,
     HttpClientModule,
     SharedModule.forRoot(),
-    ModalModule.forRoot(),
-    BsDropdownModule.forRoot(),
-    CollapseModule.forRoot(),
-    TabsModule.forRoot(),
     ServiceProxyModule,
     RootRoutingModule
   ],

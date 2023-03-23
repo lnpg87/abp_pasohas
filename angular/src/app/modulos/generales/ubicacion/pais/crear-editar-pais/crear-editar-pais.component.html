@@ -1,0 +1,27 @@
+<form action="#" (ngSubmit)="onSubmit()" [formGroup]="formPais">
+    <div class="card ml-0 p-0 border-0">
+        <div class="formgrid grid">
+            <div class="field col-12 md:col-4 pb-0">
+                <app-text-input
+                    uppercase
+                    [formControl]='$any(formPais).controls["codigoIso"]'
+                    [placeholder]="'DO'"
+                    [title]="'Codigo Iso'">
+                </app-text-input>
+            </div>
+            <div class="field col-12">
+                <app-text-input
+                    [formControl]='$any(formPais).controls["descripcion"]'
+                    [placeholder]="'REPUBLICA DOMINICANA'"
+                    [title]="'Descripcion'">
+                </app-text-input>
+            </div>
+        </div>
+        <div class="align-to-end">
+            <button pButton pRipple type="button" label="Guardar" class="p-button-outlined p-button-success"></button>
+            <button pButton pRipple type="button" label="Salir" class="p-button-outlined p-button-danger" style="margin-left: 0.2rem"></button>
+        </div>
+    </div>
+</form>
+
+

@@ -38,6 +38,7 @@ import { AppComponentBase } from '@shared/app-component-base';
                 tabindex="0"
                 pRipple>
                 <i [ngClass]="item.icon" class="layout-menuitem-icon"></i>
+                <fa-icon [icon]="item.icon"></fa-icon>
                 <span class="layout-menuitem-text">{{ item.label }}</span>
                 <i class="pi pi-fw pi-angle-down layout-submenu-toggler" *ngIf="item.items"></i>
             </a>

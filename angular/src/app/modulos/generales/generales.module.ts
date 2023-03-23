@@ -10,7 +10,10 @@ import { GeneralesRoutingModule } from './generales-routing.module';
   ],
   imports: [
     CommonModule,
-    GeneralesRoutingModule
+    GeneralesRoutingModule,
+  ],
+  exports:[
+
   ]
 })
 export class GeneralesModule { }

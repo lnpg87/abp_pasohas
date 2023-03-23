@@ -1,6 +1,5 @@
 <ul class="layout-menu">
     <ng-container *ngFor="let item of model; let i = index;">
-        <!-- <pre>{{ item | json}}</pre> -->
         <li app-menuitem *ngIf="!item.separator && isGranted(item.permissionName)" [item]="item" [index]="i" [root]="true"></li>
         <li *ngIf="item.separator && isGranted(item.permissionName)" class="menu-separator"></li>
     </ng-container>

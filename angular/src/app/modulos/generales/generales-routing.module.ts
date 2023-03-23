@@ -16,6 +16,12 @@ const routes: Routes = [
               canActivate: [AppRouteGuard],
               loadChildren: () => import('./cliente/cliente.module').then(module => module.ClienteModule)
             },
+            {
+                path: 'ubicacion',
+                data: { permission: 'Aplicacion.Generales.Ubicacion' },
+                canActivate: [AppRouteGuard],
+                loadChildren: () => import('./ubicacion/ubicacion.module').then(module => module.UbicacionModule)
+            }
         ]
     }
 ];

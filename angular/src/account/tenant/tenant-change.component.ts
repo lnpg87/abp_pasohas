@@ -1,6 +1,8 @@
 ﻿import { Component, OnInit, Injector } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { TenantChangeDialogComponent } from './tenant-change-dialog.component';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { PrimeNGConfig } from 'primeng/api';
 import { BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -11,7 +13,7 @@ export class TenantChangeComponent extends AppComponentBase implements OnInit {
   tenancyName = '';
   name = '';
 
-  constructor(injector: Injector, private _modalService: BsModalService) {
+  constructor(injector: Injector, private _modalService: BsModalService, private primengConfig: PrimeNGConfig) {
     super(injector);
   }
 
@@ -27,9 +29,13 @@ export class TenantChangeComponent extends AppComponentBase implements OnInit {
   }
 
   showChangeModal(): void {
-    const modal = this._modalService.show(TenantChangeDialogComponent);
-    if (this.appSession.tenant) {
-      modal.content.tenancyName = this.appSession.tenant.tenancyName;
-    }
+
+     let createOrEditRoleDialog: DynamicDialogRef;
+
+     const modal = this._modalService.show(TenantChangeDialogComponent,{});
+     if (this.appSession.tenant) {
+     modal.content.tenancyName = this.appSession.tenant.tenancyName;
+
+     }
   }
 }

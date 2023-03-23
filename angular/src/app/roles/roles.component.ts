@@ -1,131 +1,68 @@
-import { Component, Injector } from '@angular/core';
-import { finalize } from 'rxjs/operators';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import {
-    PagedListingComponentBase,
-    PagedRequestDto,
-} from '@shared/paged-listing-component-base';
-import {
-    RoleServiceProxy,
-    RoleDto,
-    RoleDtoPagedResultDto,
-} from '@shared/service-proxies/service-proxies';
-import { CreateRoleDialogComponent } from './create-role/create-role-dialog.component';
-import { EditRoleDialogComponent } from './edit-role/edit-role-dialog.component';
-import { PrimeNGConfig } from 'primeng/api';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
-class PagedRolesRequestDto extends PagedRequestDto {
-    keyword: string;
-}
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { AppComponentBase } from '@shared/app-component-base';
+import { Table } from 'primeng/table';
+import { Paginator } from 'primeng/paginator';
+import { LazyLoadEvent } from 'primeng/api';
+import { RoleServiceProxy } from '@shared/service-proxies/service-proxies';
+import { finalize } from 'rxjs/operators';
+import { EditRoleDialogComponent } from './edit-role/edit-role-dialog.component';
 
 @Component({
     templateUrl: './roles.component.html',
     animations: [appModuleAnimation()],
     providers:[DialogService]
 })
-export class RolesComponent extends PagedListingComponentBase<RoleDto> {
-    roles: RoleDto[] = [];
-    selectedRole: RoleDto;
-    keyword = '';
-
-    constructor(
-        injector: Injector,
-        private _rolesService: RoleServiceProxy,
-        private _modalService: DialogService,
-        private primengConfig: PrimeNGConfig
-    ) {
+export class RolesComponent extends AppComponentBase {
+    constructor(injector: Injector,
+                private _rolService: RoleServiceProxy,
+                private dialogService: DialogService){
         super(injector);
     }
 
-    list(
-        request: PagedRolesRequestDto,
-        pageNumber: number,
-        finishedCallback: Function
-    ): void {
-        request.keyword = this.keyword;
+    @ViewChild('dataTable', { static: true }) dataTable: Table;
+    @ViewChild('paginator', { static: true }) paginator: Paginator;
 
-        this._rolesService
-            .getAll(request.keyword, request.skipCount, request.maxResultCount)
-            .pipe(
-                finalize(() => {
-                    finishedCallback();
-                })
-            )
-            .subscribe((result: RoleDtoPagedResultDto) => {
-                this.roles = result.items;
-                this.showPaging(result, pageNumber);
-            });
+    filterText:string = '';
 
-            this.primengConfig.ripple = true;
-    }
+    ref: DynamicDialogRef;
 
-    delete(role: RoleDto): void {
-        abp.message.confirm(
-            this.l('RoleDeleteWarningMessage', role.displayName),
-            undefined,
-            (result: boolean) => {
-                if (result) {
-                    this._rolesService
-                        .delete(role.id)
-                        .pipe(
-                            finalize(() => {
-                                abp.notify.success(
-                                    this.l('SuccessfullyDeleted')
-                                );
-                                this.refresh();
-                            })
-                        )
-                        .subscribe(() => {});
-                }
+    public getAllRecords(event?: LazyLoadEvent): void {
+        this.primengTableHelper.showLoadingIndicator();
+
+        if (this.primengTableHelper.shouldResetPaging(event)) {
+            this.paginator.changePage(0);
+            return;
+        }
+
+        this._rolService.getAll(
+            this.primengTableHelper.getSorting(this.dataTable),
+            this.filterText,
+            '',
+            this.primengTableHelper.getSkipCount(this.paginator, event),
+            this.primengTableHelper.getMaxResultCount(this.paginator, event))
+
+            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+            .subscribe(result => {
+                this.primengTableHelper.totalRecordsCount = result.totalCount;
+                this.primengTableHelper.records = result.items;
+                this.primengTableHelper.hideLoadingIndicator();
             }
         );
     }
 
-    createRole(): void {
-        this.showCreateOrEditRoleDialog();
-    }
-
-    editRole(role: RoleDto): void {
-        this.showCreateOrEditRoleDialog(role.id);
-    }
-
-    showCreateOrEditRoleDialog(id?: number): void {
-        let createOrEditRoleDialog: DynamicDialogRef;
-
-        if (!id) {
-            createOrEditRoleDialog = this._modalService.open(
-                CreateRoleDialogComponent,{
-                    header: 'Crear Rol',
-                    width: '70%',
-                    contentStyle: {"overflow": "auto"},
-                    baseZIndex: 10000,
-                    maximizable: true
-                });
-        } else {
-            createOrEditRoleDialog = this._modalService.open(
-                EditRoleDialogComponent,{
-                    header: 'Editar Rol',
-                    width: '70%',
-                    contentStyle: {"overflow": "auto"},
-                    baseZIndex: 10000,
-                    maximizable: true,
-                    data: {
-                        id
-                    }
-                }
-            );
-        }
-
-        let dialogRef = this._modalService.dialogComponentRefMap.get(createOrEditRoleDialog);
-
-        dialogRef.changeDetectorRef.detectChanges();
-
-        const instanceDialog = dialogRef.instance.componentRef.instance as CreateRoleDialogComponent;
-
-        instanceDialog.Save.subscribe(() => {
-            this.refresh();
+    editRol(id:number){
+        this.ref = this.dialogService.open(EditRoleDialogComponent, {
+            header: 'Editar Rol',
+            width: '70%',
+            contentStyle: {"overflow": "auto"},
+            baseZIndex: 10000,
+            maximizable: true,
+            data: {
+                id
+            }
         });
     }
 }

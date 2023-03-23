@@ -1,16 +1,47 @@
-<div [@routerTransition]>
+
   <div class="grid">
     <div class="col-12">
       <div class="card">
         <h5>Roles</h5>
-        <p-table
+        <p-table #dataTable
+            (onLazyLoad)="getAllRecords($event)"
+            [value]="primengTableHelper.records"
+            styleClass="p-datatable-striped"
+            rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+            [rowHover]="true"
+            [paginator]="false"
+            [lazy]="true"
+            [scrollable]="true"
+            ScrollWidth="100%"
+            [resizableColumns]="primengTableHelper.resizableColumns">
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="name" style="width:40%">Rol<p-sortIcon field="name"></p-sortIcon></th>
+                        <th pSortableColumn="displayName" style="width:40%">Descripcion<p-sortIcon field="displayName"></p-sortIcon></th>
+                        <th style="width:10%"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-record>
+                    <tr class="p-selectable-row">
+                        <td><span class="p-column-title">Rol</span>{{ record.name }}</td>
+                        <td><span class="p-column-title">Descripcion</span>{{ record.displayName }}</td>
+                        <td>
+                            <button pButton pRipple type="button" icon="pi pi-pencil" class="p-button-rounded p-button-text" (click)="editRol(record.id)"></button>
+                            <button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-danger p-button-text" (click)="delete(record)"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+        <!-- <p-table
           #dt
           [value]="roles"
           [(selection)]="selectedRole"
           dataKey="id"
           styleClass="p-datatable-role"
           [rowHover]="true"
-          [rows]="10"
+          [rows]="pageSize"
           [showCurrentPageReport]="true"
           [rowsPerPageOptions]="[10,25,50]"
           [loading]="isTableLoading"
@@ -35,8 +66,8 @@
                 </td>
             </tr>
           </ng-template>
-        </p-table>
+        </p-table> -->
       </div>
     </div>
   </div>
-</div>
+

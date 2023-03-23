@@ -1,0 +1,27 @@
+    <label>{{title}}</label>
+    <input
+      pInputText
+      [class.is-invalid]="ngControl.touched  && ngControl.invalid"
+      type={{type}}
+      class={{class}}
+      [formControl]="$any(ngControl.control)"
+      placeholder={{placeholder}}>
+
+    <div *ngIf="ngControl.control.invalid && (ngControl.control.dirty || ngControl.control.touched)">
+    <div *ngIf="ngControl.control.errors?.required" class="invalid-feedback">El campo {{title}} es requerido</div>
+
+    <div *ngIf="ngControl.control.errors?.minlength" class="invalid-feedback">
+      El campo {{title}} debe tener al menos {{ngControl.control.errors.minlength['requiredLength']}}</div>
+
+    <div *ngIf="ngControl.control.errors?.maxlength" class="invalid-feedback">
+      El campo {{title}} debe tener maximo {{ngControl.control.errors.maxlength['requiredLength']}}</div>
+
+    <div *ngIf="ngControl.control.errors?.pattern" class="invalid-feedback">
+      El campo {{title}} tiene caracteres no valido
+    </div>
+
+    <div *ngIf="ngControl.control.errors?.isMatching" class="invalid-feedback">Password do not match</div>
+
+    <div *ngIf="ngControl.control.errors?.codeExist" class="invalid-feedback">{{title}} ya existe en la base de datos</div>
+</div>
+

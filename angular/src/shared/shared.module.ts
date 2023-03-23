@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NgxPaginationModule } from 'ngx-pagination';
 
 import { AppSessionService } from './session/app-session.service';
 import { AppUrlService } from './nav/app-url.service';
@@ -9,7 +8,6 @@ import { AppAuthService } from './auth/app-auth.service';
 import { AppRouteGuard } from './auth/auth-route-guard';
 import { LocalizePipe } from '@shared/pipes/localize.pipe';
 
-import { AbpPaginationControlsComponent } from './components/pagination/abp-pagination-controls.component';
 import { AbpValidationSummaryComponent } from './components/validation/abp-validation.summary.component';
 import { AbpModalHeaderComponent } from './components/modal/abp-modal-header.component';
 import { AbpModalFooterComponent } from './components/modal/abp-modal-footer.component';
@@ -29,36 +27,45 @@ import { TreeModule } from 'primeng/tree';
 import { ArrayToTreeConverterService } from './helpers/array-to-tree-converter.service';
 import { TreeDataHelperService } from './helpers/tree-data-helper.service';
 import { PermissionTreeComponent } from './components/permisos/permission-tree.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {SidebarModule} from 'primeng/sidebar';
+import {PaginatorModule} from 'primeng/paginator';
+import { DropdownModule } from 'primeng/dropdown';
+import { TextInputComponent } from './components/text-input/text-input.component';
+import { UppercaseDirective } from './directives/uppercase.directive';
 
 @NgModule({
     imports: [
         CommonModule,
         RouterModule,
-        NgxPaginationModule,
+        TableModule,
         TreeModule,
         InputTextModule,
-        FormsModule
+        PaginatorModule,
+        DropdownModule,
+        FormsModule,
+        ReactiveFormsModule
     ],
     declarations: [
-        AbpPaginationControlsComponent,
         AbpValidationSummaryComponent,
         AbpModalHeaderComponent,
         AbpModalFooterComponent,
         PermissionTreeComponent,
         LocalizePipe,
         BusyDirective,
-        EqualValidator
+        EqualValidator,
+        TextInputComponent,
+        UppercaseDirective
     ],
     exports: [
-        AbpPaginationControlsComponent,
         AbpValidationSummaryComponent,
         AbpModalHeaderComponent,
         AbpModalFooterComponent,
         PermissionTreeComponent,
+        TextInputComponent,
         LocalizePipe,
         BusyDirective,
+        UppercaseDirective,
         EqualValidator,
         TableModule,
         InputTextModule,
@@ -68,7 +75,11 @@ import {SidebarModule} from 'primeng/sidebar';
         CardModule,
         ToolbarModule,
         TreeModule,
-        SidebarModule
+        PaginatorModule,
+        SidebarModule,
+        DropdownModule,
+        FormsModule,
+        ReactiveFormsModule
     ]
 })
 export class SharedModule {

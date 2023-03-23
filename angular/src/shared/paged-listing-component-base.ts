@@ -1,4 +1,4 @@
-import { AppComponentBase } from 'shared/app-component-base';
+import { AppComponentBase } from '@shared/app-component-base';
 import { Component, Injector, OnInit } from '@angular/core';
 
 export class PagedResultDto {
@@ -18,6 +18,7 @@ export class PagedRequestDto {
 @Component({
     template: ''
 })
+// eslint-disable-next-line @angular-eslint/component-class-suffix
 export abstract class PagedListingComponentBase<TEntityDto> extends AppComponentBase implements OnInit {
 
     public pageSize = 10;

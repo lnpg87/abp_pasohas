@@ -13,7 +13,13 @@
         public const string Aplicacion = "Aplicacion";
         public const string Aplicacion_Generales = "Aplicacion.Generales";
 
-        //CLIENTE
+        //GENERALES.CLIENTE
         public const string Aplicacion_Generales_Cliente = "Aplicacion.Generales.Cliente";
+        public const string Aplicacion_Generales_Cliente_Crear = "Aplicacion.Generales.Cliente.Crear";
+
+        //GENERALES.UBICACION
+        public const string Aplicacion_Generales_Ubicacion = "Aplicacion.Generales.Ubicacion";
+        public const string Aplicacion_Generales_Ubicacion_Pais = "Aplicacion.Generales.Ubicacion.Pais";
+        public const string Aplicacion_Generales_Ubicacion_Pais_Crear = "Aplicacion.Generales.Ubicacion.Pais.Crear";
     }
 }

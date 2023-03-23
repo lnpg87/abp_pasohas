@@ -34,9 +34,29 @@ export class AppMenuComponent extends AppComponentBase implements OnInit {
                 items: [
                     {
                         label: 'Cliente',
-                        icon: 'pi pi-fw pi-home',
-                        routerLink: ['/app/generales/cliente'],
-                        permissionName : 'Aplicacion.Generales.Cliente'
+                        icon: "pi pi-id-card",
+                        permissionName : 'Aplicacion.Generales.Cliente',
+                        items:[
+                            {
+                                label: 'Crear',
+                                icon: 'pi pi-plus',
+                                routerLink: ['/app/generales/cliente'],
+                                permissionName : 'Aplicacion.Generales.Cliente.Crear',
+                            }
+                        ]
+                    },
+                    {
+                        label: 'Ubicacion',
+                        icon: 'pi pi-globe',
+                        permissionName : 'Aplicacion.Generales.Ubicacion',
+                        items: [
+                            {
+                                label: 'Pais',
+                                icon: 'bi bi-circle-fill',
+                                permissionName : 'Aplicacion.Generales.Ubicacion.Pais',
+                                routerLink: ['/app/generales/ubicacion/pais'],
+                            }
+                        ]
                     }
                 ]
             },
@@ -46,7 +66,7 @@ export class AppMenuComponent extends AppComponentBase implements OnInit {
                 items:[
                     {
                         label: 'Roles',
-                        icon: 'fa-solid fa-tower-control',
+                        icon: 'pi pi-users',
                         routerLink: ['/app/roles'],
                         permissionName : 'Pages.Roles'
                     }

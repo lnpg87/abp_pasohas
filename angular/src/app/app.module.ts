@@ -20,12 +20,9 @@ import { CreateRoleDialogComponent } from './roles/create-role/create-role-dialo
 import { EditRoleDialogComponent } from './roles/edit-role/edit-role-dialog.component';
 import { RolesComponent } from './roles/roles.component';
 import { AppFooterComponent } from './layout/app.footer.component';
-import { AppConfigComponent } from './layout/config/app.config.component';
 import { AppMenuComponent } from './layout/app.menu.component';
 import { AppConfigModule } from './layout/config/config.module';
 import { AppMenuitemComponent } from './layout/app.menuitem.component';
-
-
 
 @NgModule({
     declarations: [
@@ -50,7 +47,9 @@ import { AppMenuitemComponent } from './layout/app.menuitem.component';
         DynamicDialogModule,
         AppConfigModule
     ],
-
+    exports: [
+        SharedModule
+    ],
     providers: [
         {
             provide: LocationStrategy,
@@ -72,5 +71,4 @@ import { AppMenuitemComponent } from './layout/app.menuitem.component';
     bootstrap: [AppComponent]
 })
 export class AppModule {
-
- }
+}

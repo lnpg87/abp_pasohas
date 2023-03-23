@@ -17,8 +17,14 @@ namespace q.Authorization
             var aplicacion = context.GetPermissionOrNull(PermissionNames.Aplicacion) ?? context.CreatePermission(PermissionNames.Aplicacion, L("Aplicacion"));
             var generales = aplicacion.CreateChildPermission(PermissionNames.Aplicacion_Generales, L("Generales"));
 
-            //CLIENTE
+            //GENERALES.CLIENTE
             var cliente = generales.CreateChildPermission(PermissionNames.Aplicacion_Generales_Cliente, L("Cliente"));
+            cliente.CreateChildPermission(PermissionNames.Aplicacion_Generales_Cliente_Crear, L("Crear"));
+
+            //GENERALES.UBICACION
+            var ubicacion = generales.CreateChildPermission(PermissionNames.Aplicacion_Generales_Ubicacion, L("Ubicacion"));
+            var pais = ubicacion.CreateChildPermission(PermissionNames.Aplicacion_Generales_Ubicacion_Pais, L("Pais"));
+            pais.CreateChildPermission(PermissionNames.Aplicacion_Generales_Ubicacion_Pais_Crear, L("Crear"));
         }
 
         private static ILocalizableString L(string name)
