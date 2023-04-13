@@ -7,6 +7,7 @@ using q.Models.Generales.UbicacionNs.PaisNs;
 using q.EntityFrameworkCore._Core;
 using System.Reflection.Emit;
 using System.Reflection;
+using q.Models.Generales.UbicacionNs.ProvinciaNs;
 
 namespace q.EntityFrameworkCore
 {
@@ -16,6 +17,7 @@ namespace q.EntityFrameworkCore
 
         //GENERALES
         public DbSet<Pais> Pais { get; set; }
+        public DbSet<Provincia> Provincia { get; set; }
         public qDbContext(DbContextOptions<qDbContext> options) : base(options)
         {
         }

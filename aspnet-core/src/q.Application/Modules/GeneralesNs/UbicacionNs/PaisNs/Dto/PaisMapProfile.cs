@@ -16,6 +16,8 @@ namespace q.Modules.GeneralesNs.UbicacionNs.PaisNs.Dto
                 .ForMember(x => x.DescripcionCodigoIso, o => o.MapFrom(x => string.Concat(x.CodigoIso, " - ", x.Descripcion)));
 
             CreateMap<PaisDto, Pais>();
+
+            CreateMap<PaisListDto, Pais>();
         }
     }
 }

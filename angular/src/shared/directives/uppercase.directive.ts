@@ -1,4 +1,10 @@
-import { Directive, ElementRef, EventEmitter, HostListener, Output } from '@angular/core';
+import {
+    Directive,
+    EventEmitter,
+    HostListener,
+    Output,
+} from '@angular/core';
+import { NgControl } from '@angular/forms';
 
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
@@ -13,20 +19,12 @@ export class UppercaseDirective {
 
     lastValue: string;
 
-    constructor(public ref: ElementRef) {}
+    constructor(private readonly control: NgControl) {}
 
-    @HostListener('input', ['$event']) onInput($event) {
-        var start = $event.target.selectionStart;
-        var end = $event.target.selectionEnd;
-        $event.target.value = $event.target.value.toUpperCase();
-        $event.target.setSelectionRange(start, end);
-        $event.preventDefault();
-
-        if (!this.lastValue ||(this.lastValue && $event.target.value.length > 0 &&this.lastValue !== $event.target.value)) {
-            this.lastValue = this.ref.nativeElement.value = $event.target.value;
-            // Propagation
-            const evt = document.createEvent('HTMLEvents');
-            evt.target.dispatchEvent(evt);
-        }
+    @HostListener('input', ['$event.target'])
+    public onInput(input: HTMLInputElement): void {
+        const caretPos = input.selectionStart;
+        this.control.control.setValue(input.value.toUpperCase());
+        input.setSelectionRange(caretPos, caretPos);
     }
 }

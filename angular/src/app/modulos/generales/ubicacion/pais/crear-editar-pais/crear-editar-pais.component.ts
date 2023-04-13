@@ -1,66 +1,110 @@
-import { Component, Injector, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
+import { Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
+import {
+    FormBuilder,
+    FormGroup,
+    Validators,
+} from '@angular/forms';
 import { AppComponentBase } from '@shared/app-component-base';
-import { PaisDto, PaisServiceProxy } from '@shared/service-proxies/service-proxies';
-import { DynamicDialogConfig } from 'primeng/dynamicdialog';
+import {
+    PaisDto,
+    PaisServiceProxy,
+} from '@shared/service-proxies/service-proxies';
+import { MessageService } from 'primeng/api';
+import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { finalize } from 'rxjs';
 
 @Component({
-  selector: 'app-crear-editar-pais',
-  templateUrl: './crear-editar-pais.component.html',
-  styleUrls: ['./crear-editar-pais.component.scss']
+    selector: 'app-crear-editar-pais',
+    templateUrl: './crear-editar-pais.component.html',
+    styleUrls: ['./crear-editar-pais.component.scss'],
+    providers:[MessageService]
 })
 export class CrearEditarPaisComponent extends AppComponentBase implements OnInit {
-
     formPais: FormGroup;
     paisDto: PaisDto;
 
-    constructor(public injector: Injector,
+    constructor(
+        public injector: Injector,
         private _paisService: PaisServiceProxy,
         private fb: FormBuilder,
-        public config: DynamicDialogConfig){
+        public config: DynamicDialogConfig,
+        private _paisDialogRef: DynamicDialogRef,
+        private messageService: MessageService
+    ) {
         super(injector);
 
         this.initialize();
     }
 
     ngOnInit(): void {
+        if (this.config.data?.id) {
+            this._paisService
+                .get(this.config.data.id)
+                .pipe(finalize(() => {}))
+                .subscribe((result) => {
+                    this.paisDto = result;
 
-        if(this.config.data?.id){
-
-             this._paisService.get(this.config.data.id)
-                 .pipe(finalize(()=>{}))
-                 .subscribe(result=>{
-
-                     this.paisDto = result;
-
-                     this.formPais.patchValue(result);
-                 });
+                    this.formPais.patchValue(this.paisDto);
+                });
         }
     }
 
-    initialize(): void{
-        this.formPais = this.fb.group({
-            codigoIso:[null,{
-                validators:[
-                    Validators.required,
-                    Validators.minLength(2),
-                    Validators.maxLength(2)
-                ]
-            }],
-            descripcion: ['',{
-                validators:[
-                    Validators.required
-                ]
-            }]
-        },
-        {
-            updateOn: 'change'
-        }
+    initialize(): void {
+        this.formPais = this.fb.group(
+            {
+                codigoIso: ['',
+                    {
+                        validators: [
+                            Validators.required,
+                            Validators.minLength(2),
+                            Validators.maxLength(2),
+                            Validators.pattern('[-_a-zA-Z0-9]*'),
+                        ],
+                    },
+                ],
+                descripcion: ['',
+                    {
+                        validators: [Validators.required],
+                    },
+                ],
+            },
+            {
+                updateOn: 'blur',
+            }
         );
     }
 
     onSubmit() {
-        throw new Error('Method not implemented.');
+        if (this.formPais.valid) {
+            if (this.config.data?.id) {
+                this.paisDto = this.formPais.value;
+               // this.paisDto.id = this.config.data.id;
+
+                this._paisService.update(this.paisDto).subscribe({
+                    next: ()=>{
+                        this._paisDialogRef.close();
+                    },
+                    error: err => {
+                        this._paisDialogRef.close();
+                    },
+                });
+            }else{
+                console.log(this.formPais.valid);
+                if(this.formPais.valid){
+                    this._paisService.create(this.formPais.value).subscribe({
+                        next: ()=>{
+                            this._paisDialogRef.close();
+                        },
+                        error: err=>{
+                            this.messageService.add({
+                                severity: 'error',
+                                summary: 'Service Message',
+                                detail: err,
+                            });
+                        }
+                    });
+                }
+            }
+        }
     }
 }

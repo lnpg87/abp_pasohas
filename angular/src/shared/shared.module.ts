@@ -33,6 +33,7 @@ import {PaginatorModule} from 'primeng/paginator';
 import { DropdownModule } from 'primeng/dropdown';
 import { TextInputComponent } from './components/text-input/text-input.component';
 import { UppercaseDirective } from './directives/uppercase.directive';
+import { MessagesModule } from 'primeng/messages';
 
 @NgModule({
     imports: [
@@ -44,7 +45,8 @@ import { UppercaseDirective } from './directives/uppercase.directive';
         PaginatorModule,
         DropdownModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MessagesModule
     ],
     declarations: [
         AbpValidationSummaryComponent,
@@ -79,7 +81,8 @@ import { UppercaseDirective } from './directives/uppercase.directive';
         SidebarModule,
         DropdownModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MessagesModule
     ]
 })
 export class SharedModule {

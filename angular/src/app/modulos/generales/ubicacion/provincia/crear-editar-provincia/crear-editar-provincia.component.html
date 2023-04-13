@@ -1,0 +1,32 @@
+<form action="#" (ngSubmit)="onSubmit()" [formGroup]="formProvincia">
+    <div class="card border-0 p-0">
+        <p-messages></p-messages>
+        <div class="col-10 p-0">
+            <p-dropdown
+                [options]="this.paisDto"
+                formControlName="paisId"
+                optionLabel="descripcion"
+                optionValue="Id"
+                [style]="{'width':'100%'}"
+                appendTo="body"
+                [filter]="true"
+                filterBy="descripcion"
+                [showClear]="true"
+                placeholder="Select a Country">
+
+            </p-dropdown>
+        </div>
+        <div class="col-10 pl-0">
+            <app-text-input
+                uppercase
+                [formControl]='$any(formProvincia).controls["descripcion"]'
+                [placeholder]="'Santiago de los Caballeros'"
+                [title]="'Provincia'">
+            </app-text-input>
+        </div>
+        <div class="col-12 flex justify-content-end flex-wrap card-container pt-5 pr-0 pb-2">
+            <button [disabled]="!formProvincia.valid" pButton pRipple type="button" label="Guardar" class="p-button-outlined p-button-success" (click)="onSubmit()"></button>
+            <button pButton pRipple type="button" label="Salir" class="p-button-outlined p-button-danger" style="margin-left: 0.2rem"></button>
+        </div>
+    </div>
+</form>

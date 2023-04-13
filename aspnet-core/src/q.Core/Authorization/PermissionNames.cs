@@ -21,5 +21,10 @@
         public const string Aplicacion_Generales_Ubicacion = "Aplicacion.Generales.Ubicacion";
         public const string Aplicacion_Generales_Ubicacion_Pais = "Aplicacion.Generales.Ubicacion.Pais";
         public const string Aplicacion_Generales_Ubicacion_Pais_Crear = "Aplicacion.Generales.Ubicacion.Pais.Crear";
+
+        //GENERALES.UBICACION - PROVINCIA
+        public const string Aplicacion_Generales_Ubicacion_Provincia = "Aplicacion.Generales.Ubicacion.Provincia";
+        public const string Aplicacion_Generales_Ubicacion_Provincia_Crear = "Aplicacion.Generales.Ubicacion.Provincia.Crear";
+
     }
 }

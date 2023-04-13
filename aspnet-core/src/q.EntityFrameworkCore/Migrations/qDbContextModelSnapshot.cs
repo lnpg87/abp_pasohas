@@ -1599,6 +1599,41 @@ namespace q.Migrations
                     b.ToTable("Pais", "Generales");
                 });
 
+            modelBuilder.Entity("q.Models.Generales.UbicacionNs.ProvinciaNs.Provincia", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("PaisId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PaisId");
+
+                    b.ToTable("Provincia", "Generales");
+                });
+
             modelBuilder.Entity("q.MultiTenancy.Tenant", b =>
                 {
                     b.Property<int>("Id")
@@ -1879,6 +1914,18 @@ namespace q.Migrations
                     b.Navigation("DeleterUser");
 
                     b.Navigation("LastModifierUser");
+                });
+
+            modelBuilder.Entity("q.Models.Generales.UbicacionNs.ProvinciaNs.Provincia", b =>
+                {
+                    b.HasOne("q.Models.Generales.UbicacionNs.PaisNs.Pais", "Pais")
+                        .WithMany()
+                        .HasForeignKey("PaisId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_provincia_pais");
+
+                    b.Navigation("Pais");
                 });
 
             modelBuilder.Entity("q.MultiTenancy.Tenant", b =>

@@ -55,6 +55,12 @@ export class AppMenuComponent extends AppComponentBase implements OnInit {
                                 icon: 'bi bi-circle-fill',
                                 permissionName : 'Aplicacion.Generales.Ubicacion.Pais',
                                 routerLink: ['/app/generales/ubicacion/pais'],
+                            },
+                            {
+                                label: 'Provincia',
+                                icon: 'bi bi-circle-fill',
+                                permissionName : 'Aplicacion.Generales.Ubicacion.Provincia',
+                                routerLink: ['/app/generales/ubicacion/provincia'],
                             }
                         ]
                     }

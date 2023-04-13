@@ -25,6 +25,9 @@ namespace q.Authorization
             var ubicacion = generales.CreateChildPermission(PermissionNames.Aplicacion_Generales_Ubicacion, L("Ubicacion"));
             var pais = ubicacion.CreateChildPermission(PermissionNames.Aplicacion_Generales_Ubicacion_Pais, L("Pais"));
             pais.CreateChildPermission(PermissionNames.Aplicacion_Generales_Ubicacion_Pais_Crear, L("Crear"));
+
+            ubicacion.CreateChildPermission(PermissionNames.Aplicacion_Generales_Ubicacion_Provincia, L("Provincia"));
+            ubicacion.CreateChildPermission(PermissionNames.Aplicacion_Generales_Ubicacion_Provincia_Crear, L("Crear"));
         }
 
         private static ILocalizableString L(string name)
