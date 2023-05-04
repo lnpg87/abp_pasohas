@@ -12,7 +12,7 @@ import { CrearEditarPaisComponent } from './crear-editar-pais/crear-editar-pais.
   selector: 'app-pais',
   templateUrl: './pais.component.html',
   styleUrls: ['./pais.component.scss'],
-  providers:[PaisServiceProxy,DialogService]
+  providers:[DialogService]
 })
 
 export class PaisComponent extends AppComponentBase  {

@@ -34,6 +34,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TextInputComponent } from './components/text-input/text-input.component';
 import { UppercaseDirective } from './directives/uppercase.directive';
 import { MessagesModule } from 'primeng/messages';
+import { CustomSelectComponent } from './components/custom-select/custom-select.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
     imports: [
@@ -46,18 +48,21 @@ import { MessagesModule } from 'primeng/messages';
         DropdownModule,
         FormsModule,
         ReactiveFormsModule,
-        MessagesModule
+        MessagesModule,
+        NgSelectModule
     ],
     declarations: [
         AbpValidationSummaryComponent,
         AbpModalHeaderComponent,
         AbpModalFooterComponent,
         PermissionTreeComponent,
+        CustomSelectComponent,
         LocalizePipe,
         BusyDirective,
         EqualValidator,
         TextInputComponent,
-        UppercaseDirective
+        UppercaseDirective,
+        CustomSelectComponent
     ],
     exports: [
         AbpValidationSummaryComponent,
@@ -65,6 +70,7 @@ import { MessagesModule } from 'primeng/messages';
         AbpModalFooterComponent,
         PermissionTreeComponent,
         TextInputComponent,
+        CustomSelectComponent,
         LocalizePipe,
         BusyDirective,
         UppercaseDirective,
@@ -82,7 +88,8 @@ import { MessagesModule } from 'primeng/messages';
         DropdownModule,
         FormsModule,
         ReactiveFormsModule,
-        MessagesModule
+        MessagesModule,
+        NgSelectModule
     ]
 })
 export class SharedModule {

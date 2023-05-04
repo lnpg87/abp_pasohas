@@ -1,0 +1,34 @@
+<label *ngIf="mostrarLabel" [hidden]="oculto"  for="select">{{ label }}</label>
+<!-- <app-input-validation-icon  *ngIf="!oculto" [mostrar]="requerido" [input]="select"></app-input-validation-icon>  -->
+<ng-select [items]="lista.length > 0 ? lista: items"
+    name="Select"
+    bindValue="{{bindId}}"
+    bindLabel="identificador"
+    [required]="requerido"
+    id="select"
+    #select="ngModel"                   
+    [virtualScroll]="true"
+    appendTo="[role='dialog']"
+    [hidden]="oculto"
+    [clearable]="permiteLimpiar"
+    [typeahead]="typeAhead"
+    [multiple]="multipleSeleccion"
+    placeholder="Seleccione uno..."
+    [disabled]="!activo"
+    (scrollToEnd)="onScrollToEnd()"
+    (focus)="onFocus()"
+    (open)="abrirSelect()"
+    (change)="cambioElementoSeleccionado($event)"
+    [(ngModel)]="model">
+
+    <ng-template ng-label-tmp let-item="item">
+        <span class="text-primary" *ngIf="item[identificador] && mostrarIdentificadorSeleccion">{{ item[identificador] }}</span> <span *ngIf="item[identificador] && mostrarIdentificadorSeleccion" > - </span> <span> {{ item[descripcion] }} </span>
+    </ng-template>
+
+    <ng-template ng-option-tmp let-item="item">
+        {{ item[descripcion] }}<br/>
+        <small *ngIf="mostrarIdentificadorSeleccion" class="text-muted">{{ item[identificador] }}</small>
+    </ng-template>
+</ng-select>
+
+<app-input-validation *ngIf="requerido && !oculto" [input]="select"></app-input-validation>
