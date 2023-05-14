@@ -3,10 +3,13 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AbpHttpInterceptor } from 'abp-ng2-module';
 
 import * as ApiServiceProxies from './service-proxies';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
     providers: [
         ApiServiceProxies.PaisServiceProxy,
+        ApiServiceProxies.ProvinciaServiceProxy,
+        MessageService,
         ApiServiceProxies.RoleServiceProxy,
         ApiServiceProxies.SessionServiceProxy,
         ApiServiceProxies.TenantServiceProxy,

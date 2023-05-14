@@ -11,6 +11,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { AbpValidationError } from './abp-validation.api';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'abp-validation-summary',
   templateUrl: './abp-validation.summary.component.html'
 })

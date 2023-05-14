@@ -1,41 +1,34 @@
-import { Component, Injector, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, Injector, OnInit, SkipSelf, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CustomSelectComponent } from '@shared/components/custom-select/custom-select.component';
 import { PaisDto, PaisServiceProxy, ProvinciaDto, ProvinciaServiceProxy } from '@shared/service-proxies/service-proxies';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
-interface City {
-    name: string;
-    code: string;
-}
-
 @Component({
   selector: 'app-crear-editar-provincia',
   templateUrl: './crear-editar-provincia.component.html',
-  styleUrls: ['./crear-editar-provincia.component.scss'],
-  providers:[MessageService,ProvinciaServiceProxy,PaisServiceProxy]
+  styleUrls: ['./crear-editar-provincia.component.scss']
 })
 export class CrearEditarProvinciaComponent extends AppComponentBase implements OnInit  {
+    errorMessages = { required: 'The name field is required' };
+    testControl = new FormControl('MyDefaultValue', Validators.required);
 
-    @ViewChild('paisSelect', {static: false}) paisSelect : CustomSelectComponent;
 
-    formProvincia: FormGroup;
+    //  formProvincia = new FormGroup({
+    //      paisId: new FormControl('',Validators.required)
+    //  });
+
+    formProvincia : FormGroup;
+
     provinciaDto: ProvinciaDto;
     paisDto:PaisDto[];
-    selectedCountry: string;
-
-
-    cities: City[];
-
-    selectedCity: City;
 
     constructor(
         public injector: Injector,
         private _provinciaService: ProvinciaServiceProxy,
-        private fb: FormBuilder,
         private config: DynamicDialogConfig,
+        public fb: FormBuilder,
         private _provinciaDialogRef: DynamicDialogRef,
         public _paisService: PaisServiceProxy,
         private messageService: MessageService
@@ -46,7 +39,7 @@ export class CrearEditarProvinciaComponent extends AppComponentBase implements O
     }
 
     ngOnInit(): void {
-        this.initialize();
+       // this.initialize();
 
         this.loadListPais();
 
@@ -56,6 +49,7 @@ export class CrearEditarProvinciaComponent extends AppComponentBase implements O
     }
 
     initialize(): void {
+
         this.formProvincia = this.fb.group(
             {
                 descripcion: ['',
@@ -71,8 +65,8 @@ export class CrearEditarProvinciaComponent extends AppComponentBase implements O
                 paisId: ['',
                     {
                         validators: [Validators.required],
-                    },
-                ],
+                    }
+                ]
             },
             {
                 updateOn: 'blur',
@@ -81,14 +75,10 @@ export class CrearEditarProvinciaComponent extends AppComponentBase implements O
     }
 
     loadListPais(){
-        
+
     }
 
     onSubmit(){
 
-    }
-
-    onScroll(event){
-      console.log(event);
     }
 }

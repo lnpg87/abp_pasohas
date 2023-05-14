@@ -1,28 +1,20 @@
 <form action="#" (ngSubmit)="onSubmit()" [formGroup]="formProvincia">
-    <div class="card border-0 p-0" id="myform">
+    <div class="card border-0 p-0">
         <p-messages></p-messages>
         <div class="col-10">
-            <app-custom-select 
-                [label]="'Pais'" 
-                [bindId]="'id'"
-                bindLabel = "descripcion"
-                [descripcion] = "'descripcion'"
-                [servicio]="_paisService"
-                >
+            <app-custom-select
+                [customErrorMessages]="errorMessages"
+                bindLabel="descripcion"
+                label="Pais"
+                bindValue="id"
+                [service]="_paisService"
+                selectId="paisId"
+                [showValue]="false"
+                formControlName="paisId">
             </app-custom-select>
         </div>
-        <div class="col-10">
-            <app-text-input
-                uppercase
-                [formControl]="$any(formProvincia).controls['descripcion']"
-                [placeholder]="'Santiago de los Caballeros'"
-                [title]="'Provincia'"
-            >
-            </app-text-input>
-        </div>
         <div
-            class="col-12 flex justify-content-end flex-wrap card-container pt-5 pr-0 pb-2"
-        >
+            class="col-12 flex justify-content-end flex-wrap card-container pt-5 pr-0 pb-2">
             <button
                 [disabled]="!formProvincia.valid"
                 pButton

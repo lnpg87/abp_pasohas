@@ -1,184 +1,193 @@
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef, AfterContentChecked, ViewChild, ElementRef } from '@angular/core';
-import { debounceTime, distinctUntilChanged, tap, switchMap, finalize } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { ChangeDetectorRef, Component, Inject, Injector, Input, OnInit, ViewChild, forwardRef } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
-import { NgModel } from '@angular/forms';
+import { ControlValueAccessorDirective } from '@shared/directives/control-value-accessor.directive';
+import {
+    Subject,
+    debounceTime,
+    distinctUntilChanged,
+    finalize,
+    switchMap,
+    tap,
+} from 'rxjs';
 
 @Component({
-  selector: 'app-custom-select',
-  templateUrl: './custom-select.component.html'
+    selector: 'app-custom-select',
+    templateUrl: './custom-select.component.html',
+    styleUrls: ['./custom-select.component.scss'],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => CustomSelectComponent),
+            multi: true,
+        },
+    ],
 })
-export class CustomSelectComponent implements OnInit {
-  @ViewChild(NgSelectComponent, { static: false }) ngSelect: NgSelectComponent;
-  @ViewChild('select', { static: false }) select: NgModel;
+export class CustomSelectComponent<T> extends ControlValueAccessorDirective<T> implements OnInit{
 
-  private paginaActual = 1;
-  public cargando = false;
-  private valorSeleccionado: number | string;
-  public typeAhead = new Subject<string>();
-  public items: any[] = [];
-  public modalForm:any;
-  public body = "body";
-  public filtroSeleccionado = '';
-  private terminoBusqueda = '';
+    //Input Properties
+    @Input() bindId: string | number = 'id';
+    @Input() bindLabel: string | number = 'descripcion';
+    @Input() options: T[] = [];
+    @Input() label = '';
+    @Input() showLabel = true;
+    @Input() customErrorMessages: Record<string, string> = {};
+    @Input() clearable = true;
+    @Input() service: any = null;
+    @Input() debounceTime = 500;
+    @Input() itemsPerPage = 10;
+    @Input() appendTo = 'body';
+    @Input() placeholder: string;
+    @Input() showValue = true;
+    @Input() selectId = '';
 
-  @Output() cambioValor = new EventEmitter();
-  @Input() placeholder: string;
-  @Input() bindId: string | number = "id";
-  @Input() identificador: string;
-  @Input() descripcion: string;
-  @Input() debounceTime = 500;
-  @Input() appendTo = "body";
-  @Input() requerido = false;
-  @Input() elementosPagina = 10;
-  @Input() servicio: any = null;
-  @Input() appendToModal = false;
-  @Input() cargarAlAbrir = false;
-  @Input() permiteLimpiar = true;
-  @Input() activo = true;
-  @Input() oculto = false;
-  @Input() label: string;
-  @Input() mostrarIdentificadorSeleccion=true;
-  @Input() mostrarLabel = true;
-  @Input() lista: any[] = [];
-  @Input() multipleSeleccion = false;
-  @Input()
-  get model(): number | string {
-    return this.valorSeleccionado;
-  }
-  set model(valor: number | string) {
-    this.valorSeleccionado = valor
+    //Public Properties
+    public items: any[] = [];
+    public typeAhead = new Subject<string>();
+    public selectedFilter = '';
+    public loading = false;
 
-    if (+valor > 0 && this.lista.length === 0) {
-      this.cargarElementos();
-      this.agregarMas();
+
+    //Private Properties
+    private currentPage = 1;
+    private selectedValue: number | string;
+
+    //Custom Functions
+    @Input()
+    get filtrer(): string {
+        return this.selectedFilter;
+    }
+    set filtrer(valor: string) {
+        this.selectedFilter = valor;
     }
 
-  }
+   constructor(injector: Injector,private changeDetector: ChangeDetectorRef) {
+       super(injector);
+   }
 
-  @Input()
-  get filtro(): string {
-    return this.filtroSeleccionado;
-  }
-  set filtro(valor: string) {
-      this.filtroSeleccionado = valor;
-  }
+    ngOnInit(): void {
+        super.ngOnInit();
 
-  constructor(private changeDetector: ChangeDetectorRef) { }
 
-  public ngOnInit(): void {
+        if (this.appendTo === 'modal') {
+            this.appendTo = undefined;
+        }
 
-    if (this.appendTo === 'modal') {
-      this.appendTo = undefined;
+        if (this.placeholder === undefined || this.placeholder === '') {
+            this.placeholder = 'Seleccione uno...';
+        }
+
+        if (this.options.length === 0 && this.service) {
+            this.loadOptions();
+        }
+
+        super.control.markAsDirty();
     }
 
-    if (this.placeholder === undefined || this.placeholder === '') {
-      this.placeholder = 'Seleccione uno...';
-    }
+    public loadOptions(): void {
+        this.items.length = 0;
+        if (this.options.length == 0) {
+            this.service
+                .getAll('', '', this.selectedFilter, 0, this.itemsPerPage)
+                .pipe(finalize(() => {}))
+                .subscribe((resultado: { items: any }) => {
+                    this.items = [...resultado.items];
+                    this.changeDetector.markForCheck();
+                    this.currentPage = 1;
+                });
+        }
 
-    if (this.lista.length === 0 && this.servicio) {
-      this.cargarElementos();
-    }
-  }
-
-  public cambioElementoSeleccionado(event: any) {
-    this.cambioValor.emit({ id: this.model, event: event });
-  }
-
-  public cargarElementos(): void {
-    this.items.length = 0;
-    if (this.lista.length == 0) {
-
-      this.servicio.getAll('', '', this.filtroSeleccionado, 0, this.elementosPagina)
-        .pipe(finalize(() => { }))
-        .subscribe(
-          (resultado: { items: any; }) => {
-            this.items = [...resultado.items];
-            this.changeDetector.markForCheck();
-            this.paginaActual = 1;
-          });
-    }
-
-
-      this.typeAhead.pipe(
-        debounceTime(this.debounceTime),
-        distinctUntilChanged(),
-        tap(() => this.cargando = true),
-        switchMap(term => 
-          this.servicio.getAll('', term, this.filtroSeleccionado, 0, this.elementosPagina).pipe(finalize(() => { }))
-        ))
-        .subscribe(
-          (resultado: any) => {
-            this.items = [...resultado.items];
-            this.changeDetector.markForCheck();
-            this.paginaActual = 1;
-        });
-    
-    this.cargando = false;
-  }
-
-  public agregarMas(): void {
-
-
-    if (+this.valorSeleccionado > 0) {
-      this.cargando = true;
-      if (!this.items.some(x => x.id === this.valorSeleccionado) && this.items.length > 0) {
-        this.servicio.get(this.valorSeleccionado)
-          .pipe(finalize(() => { }))
-          .subscribe(
-            (resultado: any) => {
-              if (resultado) {
-                this.items.push(resultado);
-                this.items = [...this.items];
+        this.typeAhead
+            .pipe(
+                debounceTime(this.debounceTime),
+                distinctUntilChanged(),
+                tap(() => (this.loading = true)),
+                switchMap((term) =>
+                    this.service
+                        .getAll(
+                            '',
+                            term,
+                            this.selectedFilter,
+                            0,
+                            this.itemsPerPage
+                        )
+                        .pipe(finalize(() => {}))
+                )
+            )
+            .subscribe((resultado: any) => {
+                this.items = [...resultado.items];
                 this.changeDetector.markForCheck();
-                this.paginaActual = 1;
-              }
+                this.currentPage = 1;
             });
-      }
 
-    } else {
-      this.servicio.getAll('', '', this.filtroSeleccionado, this.paginaActual * this.elementosPagina, this.elementosPagina)
-        .pipe(finalize(() => { }))
-        .subscribe(
-          (resultado: any) => {
-            if (resultado.items.length > 0) {
-              this.items = [...this.items, ...resultado.items.filter((u: any) => !this.items.includes(u))];
-              this.changeDetector.markForCheck();
-              this.paginaActual += 1;
+        this.loading = false;
+    }
+
+    public loadMore(): void {
+        if (+this.selectedValue > 0) {
+            this.loading = true;
+            if (
+                !this.items.some((x) => x.id === this.selectedValue) &&
+                this.items.length > 0
+            ) {
+                this.service
+                    .get(this.selectedValue)
+                    .pipe(finalize(() => {}))
+                    .subscribe((resultado: any) => {
+                        if (resultado) {
+                            this.items.push(resultado);
+                            this.items = [...this.items];
+                            this.changeDetector.markForCheck();
+                            this.currentPage = 1;
+                        }
+                    });
             }
-          });
+        } else {
+            this.service
+                .getAll(
+                    '',
+                    '',
+                    this.selectedFilter,
+                    this.currentPage * this.itemsPerPage,
+                    this.itemsPerPage
+                )
+                .pipe(finalize(() => {}))
+                .subscribe((resultado: any) => {
+                    if (resultado.items.length > 0) {
+                        this.items = [
+                            ...this.items,
+                            ...resultado.items.filter(
+                                (u: any) => !this.items.includes(u)
+                            ),
+                        ];
+                        this.changeDetector.markForCheck();
+                        this.currentPage += 1;
+                    }
+                });
+        }
+        this.loading = false;
     }
-    this.cargando = false;
-  }
 
-  public abrirSelect(): void {
+    public openSelect(): void {
+        if (this.options.length === 0) {
+            if (this.items.length <= 0) {
+                this.currentPage = 1;
+                this.loadOptions;
+            }
+        }
+    }
 
-    if (this.lista.length === 0) {
-
-      if (this.items.length <= 0) {
-        this.paginaActual = 1;
-        this.cargarElementos();
+    public onScrollToEnd(): void {
+        if (this.options.length === 0) {
+          this.loadMore();
+        }
       }
-    }
-  }
 
-  public onScrollToEnd(): void {
-    if (this.lista.length === 0) {
-      this.agregarMas();
-    }
-  }
+    public onFocus() {
 
-  public markAsDirty() {
-    this.select.control.markAsDirty();
-  }
+        if (this.selectedValue !== '') {
+          this.items.length = 0;
+        }
 
-  public onFocus() {
-
-    if (this.filtroSeleccionado !== '') {
-      this.items.length = 0;
-    }
-
-  }
+      }
 }
-
-

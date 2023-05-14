@@ -1,34 +1,35 @@
-<label *ngIf="mostrarLabel" [hidden]="oculto"  for="select">{{ label }}</label>
-<!-- <app-input-validation-icon  *ngIf="!oculto" [mostrar]="requerido" [input]="select"></app-input-validation-icon>  -->
-<ng-select [items]="lista.length > 0 ? lista: items"
-    name="Select"
+<div class="field m-0 p-0">
+<label *ngIf="showLabel" for="control.name">{{label}}</label>
+<ng-select
+    #select
+    [items]="options.length > 0 ? options: items"
     bindValue="{{bindId}}"
-    bindLabel="identificador"
-    [required]="requerido"
-    id="select"
-    #select="ngModel"                   
+    bindLabel="{{bindLabel}}"
+    [required]="isRequired"
     [virtualScroll]="true"
     appendTo="[role='dialog']"
-    [hidden]="oculto"
-    [clearable]="permiteLimpiar"
+    [formControl]="control"
+    [id]="selectId"
+    [clearable]="clearable"
     [typeahead]="typeAhead"
-    [multiple]="multipleSeleccion"
     placeholder="Seleccione uno..."
-    [disabled]="!activo"
     (scrollToEnd)="onScrollToEnd()"
     (focus)="onFocus()"
-    (open)="abrirSelect()"
-    (change)="cambioElementoSeleccionado($event)"
-    [(ngModel)]="model">
+    (open)="openSelect()">
 
     <ng-template ng-label-tmp let-item="item">
-        <span class="text-primary" *ngIf="item[identificador] && mostrarIdentificadorSeleccion">{{ item[identificador] }}</span> <span *ngIf="item[identificador] && mostrarIdentificadorSeleccion" > - </span> <span> {{ item[descripcion] }} </span>
+        <span class="text-primary" *ngIf="item[bindId] && showValue">{{ item[bindId] }}</span> <span *ngIf="item[bindId] && showSelectedValue" > - </span> <span> {{ item[bindLabel] }} </span>
     </ng-template>
 
     <ng-template ng-option-tmp let-item="item">
-        {{ item[descripcion] }}<br/>
-        <small *ngIf="mostrarIdentificadorSeleccion" class="text-muted">{{ item[identificador] }}</small>
+        {{ item[bindLabel] }}<br/>
+        <small *ngIf="showValue" class="text-muted">{{ item[bindId] }}</small>
     </ng-template>
 </ng-select>
 
-<app-input-validation *ngIf="requerido && !oculto" [input]="select"></app-input-validation>
+<app-validation-errors
+    *ngIf="control.invalid && (control.dirty || control.touched)"
+    [customErrorMessages]="customErrorMessages"
+    [errors]="control.errors">
+  </app-validation-errors>
+</div>

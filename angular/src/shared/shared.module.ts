@@ -36,6 +36,10 @@ import { UppercaseDirective } from './directives/uppercase.directive';
 import { MessagesModule } from 'primeng/messages';
 import { CustomSelectComponent } from './components/custom-select/custom-select.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ControlValueAccessorDirective } from './directives/control-value-accessor.directive';
+import { ValidationErrorsComponent  } from './components/validation-errors/validation-errors.component';
+import { SelectComponent } from './components/select/select.component';
+import { AppRoutingModule } from '@app/app-routing.module';
 
 @NgModule({
     imports: [
@@ -62,7 +66,9 @@ import { NgSelectModule } from '@ng-select/ng-select';
         EqualValidator,
         TextInputComponent,
         UppercaseDirective,
-        CustomSelectComponent
+        ControlValueAccessorDirective,
+        ValidationErrorsComponent,
+        SelectComponent,
     ],
     exports: [
         AbpValidationSummaryComponent,
@@ -71,9 +77,11 @@ import { NgSelectModule } from '@ng-select/ng-select';
         PermissionTreeComponent,
         TextInputComponent,
         CustomSelectComponent,
+        SelectComponent,
         LocalizePipe,
         BusyDirective,
         UppercaseDirective,
+        ControlValueAccessorDirective,
         EqualValidator,
         TableModule,
         InputTextModule,
@@ -86,10 +94,10 @@ import { NgSelectModule } from '@ng-select/ng-select';
         PaginatorModule,
         SidebarModule,
         DropdownModule,
-        FormsModule,
+      //  NgSelectModule,
         ReactiveFormsModule,
         MessagesModule,
-        NgSelectModule
+        ValidationErrorsComponent
     ]
 })
 export class SharedModule {
