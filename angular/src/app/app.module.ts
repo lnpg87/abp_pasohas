@@ -40,7 +40,6 @@ import { AppMenuitemComponent } from './layout/app.menuitem.component';
     imports: [
         CommonModule,
         FormsModule,
-        ReactiveFormsModule,
         AppRoutingModule,
         GeneralesModule,
         SharedModule,

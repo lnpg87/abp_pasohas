@@ -13,6 +13,8 @@
     [clearable]="clearable"
     [typeahead]="typeAhead"
     placeholder="Seleccione uno..."
+    [style]="{'width': '100%'}"
+    [loading]="loading"
     (scrollToEnd)="onScrollToEnd()"
     (focus)="onFocus()"
     (open)="openSelect()">

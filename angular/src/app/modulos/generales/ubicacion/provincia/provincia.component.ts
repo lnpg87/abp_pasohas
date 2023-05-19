@@ -53,7 +53,7 @@ export class ProvinciaComponent extends AppComponentBase {
 
     OnCreateProvincia(){
         this.ref = this._dialogService.open(CrearEditarProvinciaComponent, {
-            header: 'Editar Pais',
+            header: 'Crear Provincia',
             width: '35%',
             contentStyle: {"max-height": "500px", "overflow": "auto"},
             baseZIndex: 10000

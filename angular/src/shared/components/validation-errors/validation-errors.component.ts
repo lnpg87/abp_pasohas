@@ -11,7 +11,10 @@ export class ValidationErrorsComponent implements OnChanges {
     @Input() customErrorMessages: Record<string, string> = {};
 
     errorMessages: Record<string, string> = {
-        required: 'This field is required',
+        required: 'Este campo es obligatorio' ,
+        minlength: 'El campo tiene más caracteres de lo permitido',
+        maxlength: 'El campo tiene menos caracteres de lo permitido',
+        pattern: 'El campo posee caracteres no valido'
     };
 
     ngOnChanges(changes: SimpleChanges): void {

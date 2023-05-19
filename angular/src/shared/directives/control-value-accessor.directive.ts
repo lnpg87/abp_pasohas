@@ -1,4 +1,13 @@
-import { Directive, Inject, Injector, OnInit } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Directive,
+    ElementRef,
+    HostListener,
+    Inject,
+    Injector,
+    OnInit,
+    ViewChild,
+} from '@angular/core';
 import {
     ControlValueAccessor,
     FormControl,
@@ -8,21 +17,33 @@ import {
     FormGroupDirective,
     FormControlDirective,
 } from '@angular/forms';
-import { Subject, takeUntil, startWith, distinctUntilChanged, tap } from 'rxjs';
+import {
+    Subject,
+    takeUntil,
+    startWith,
+    distinctUntilChanged,
+    tap,
+    map,
+} from 'rxjs';
 
 @Directive({
     selector: '[appControlValueAccessor]',
 })
-export class ControlValueAccessorDirective<T> implements ControlValueAccessor, OnInit
+export class ControlValueAccessorDirective<T>
+    implements ControlValueAccessor, OnInit
 {
     control: FormControl | undefined;
     isRequired = false;
+    isUpperCase = true;
 
     private _isDisabled = false;
     private _destroy$ = new Subject<void>();
     private _onTouched!: () => T;
+    private initialized = false;
 
-    constructor(@Inject(Injector) private injector: Injector) { }
+    constructor(@Inject(Injector) private injector: Injector) {
+        //this.initialized = true;
+    }
 
     ngOnInit(): void {
         this.setFormControl();
@@ -51,12 +72,16 @@ export class ControlValueAccessorDirective<T> implements ControlValueAccessor, O
     }
 
     writeValue(value: T): void {
-        this.control
-            ? this.control.setValue(value)
-            : (this.control = new FormControl(value));
+        if (!this.control) {
+            this.control = new FormControl(value);
+        } else {
+            if (this.control.value !== value) {
+                this.control.setValue(value);
+            }
+        }
     }
 
-    registerOnChange(fn: (val: T | null) => T): void {
+    registerOnChange(fn: (val: T | null | unknown) => T): void {
         this.control?.valueChanges
             .pipe(
                 takeUntil(this._destroy$),
@@ -73,5 +98,14 @@ export class ControlValueAccessorDirective<T> implements ControlValueAccessor, O
 
     setDisabledState?(isDisabled: boolean): void {
         this._isDisabled = isDisabled;
+    }
+
+    @HostListener('input', ['$event.target'])
+    public onInput(input: HTMLInputElement): void {
+        if (this.isUpperCase) {
+            const caretPos = input.selectionStart;
+            this.control.setValue(input.value.toUpperCase());
+            input.setSelectionRange(caretPos, caretPos);
+        }
     }
 }

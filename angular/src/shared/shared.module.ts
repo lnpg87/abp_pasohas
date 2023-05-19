@@ -40,6 +40,7 @@ import { ControlValueAccessorDirective } from './directives/control-value-access
 import { ValidationErrorsComponent  } from './components/validation-errors/validation-errors.component';
 import { SelectComponent } from './components/select/select.component';
 import { AppRoutingModule } from '@app/app-routing.module';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
     imports: [
@@ -94,7 +95,7 @@ import { AppRoutingModule } from '@app/app-routing.module';
         PaginatorModule,
         SidebarModule,
         DropdownModule,
-      //  NgSelectModule,
+        NgSelectModule,
         ReactiveFormsModule,
         MessagesModule,
         ValidationErrorsComponent
@@ -111,7 +112,8 @@ export class SharedModule {
                 AppRouteGuard,
                 LayoutStoreService,
                 ArrayToTreeConverterService,
-                TreeDataHelperService
+                TreeDataHelperService,
+                MessageService
             ]
         };
     }

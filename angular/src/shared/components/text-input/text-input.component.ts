@@ -1,33 +1,26 @@
-import { Component, Input, Self } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { Component, HostListener, Input, QueryList, ViewChildren, forwardRef } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessorDirective } from '@shared/directives/control-value-accessor.directive';
+
+type InputType = 'text' | 'number' | 'email' | 'password';
 
 @Component({
   selector: 'app-text-input',
   templateUrl: './text-input.component.html',
-  styleUrls: ['./text-input.component.scss']
+  styleUrls: ['./text-input.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => TextInputComponent),
+      multi: true,
+    },
+  ],
 })
-export class TextInputComponent implements ControlValueAccessor {
-
-    @Input() title = '';
-    @Input() type = 'text';
-    @Input() class:string;
+export class TextInputComponent<T> extends ControlValueAccessorDirective<T> {
+    @Input() inputId = '';
+    @Input() label = '';
+    @Input() type: InputType = 'text';
+    @Input() customErrorMessages: Record<string, string> = {};
     @Input() placeholder: string;
-
-    constructor(@Self() public ngControl: NgControl) {
-        this.ngControl.valueAccessor = this;
-      }
-
-    writeValue(obj: any): void {
-
-    }
-    registerOnChange(fn: any): void {
-
-    }
-    registerOnTouched(fn: any): void {
-
-    }
-    setDisabledState?(isDisabled: boolean): void {
-
-    }
-
+    @Input() isUpperCase = true;
 }

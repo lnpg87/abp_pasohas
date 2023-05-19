@@ -16,8 +16,7 @@ import { finalize } from 'rxjs';
 @Component({
     selector: 'app-crear-editar-pais',
     templateUrl: './crear-editar-pais.component.html',
-    styleUrls: ['./crear-editar-pais.component.scss'],
-    providers:[MessageService]
+    styleUrls: ['./crear-editar-pais.component.scss']
 })
 export class CrearEditarPaisComponent extends AppComponentBase implements OnInit {
     formPais: FormGroup;
@@ -32,19 +31,18 @@ export class CrearEditarPaisComponent extends AppComponentBase implements OnInit
         private messageService: MessageService
     ) {
         super(injector);
-
-        this.initialize();
     }
 
     ngOnInit(): void {
+
+        this.initialize();
+
         if (this.config.data?.id) {
             this._paisService
                 .get(this.config.data.id)
                 .pipe(finalize(() => {}))
                 .subscribe((result) => {
-                    this.paisDto = result;
-
-                    this.formPais.patchValue(this.paisDto);
+                    this.formPais.patchValue(result)
                 });
         }
     }
@@ -58,13 +56,17 @@ export class CrearEditarPaisComponent extends AppComponentBase implements OnInit
                             Validators.required,
                             Validators.minLength(2),
                             Validators.maxLength(2),
-                            Validators.pattern('[-_a-zA-Z0-9]*'),
+                            Validators.pattern('^[a-zA-Z]+$'),
                         ],
                     },
                 ],
                 descripcion: ['',
                     {
-                        validators: [Validators.required],
+                        validators: [
+                            Validators.required,
+                            Validators.maxLength(150),
+                            Validators.pattern('^[a-zA-Z]+(\\s[a-zA-Z]+)?$')
+                        ],
                     },
                 ],
             },
@@ -72,13 +74,14 @@ export class CrearEditarPaisComponent extends AppComponentBase implements OnInit
                 updateOn: 'blur',
             }
         );
+
     }
 
     onSubmit() {
         if (this.formPais.valid) {
             if (this.config.data?.id) {
                 this.paisDto = this.formPais.value;
-               // this.paisDto.id = this.config.data.id;
+                this.paisDto.id = this.config.data.id;
 
                 this._paisService.update(this.paisDto).subscribe({
                     next: ()=>{

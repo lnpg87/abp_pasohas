@@ -61,7 +61,7 @@ export class CustomSelectComponent<T> extends ControlValueAccessorDirective<T> i
         this.selectedFilter = valor;
     }
 
-   constructor(injector: Injector,private changeDetector: ChangeDetectorRef) {
+   constructor(injector: Injector) {
        super(injector);
    }
 
@@ -80,8 +80,6 @@ export class CustomSelectComponent<T> extends ControlValueAccessorDirective<T> i
         if (this.options.length === 0 && this.service) {
             this.loadOptions();
         }
-
-        super.control.markAsDirty();
     }
 
     public loadOptions(): void {
@@ -92,7 +90,6 @@ export class CustomSelectComponent<T> extends ControlValueAccessorDirective<T> i
                 .pipe(finalize(() => {}))
                 .subscribe((resultado: { items: any }) => {
                     this.items = [...resultado.items];
-                    this.changeDetector.markForCheck();
                     this.currentPage = 1;
                 });
         }
@@ -106,17 +103,18 @@ export class CustomSelectComponent<T> extends ControlValueAccessorDirective<T> i
                     this.service
                         .getAll(
                             '',
-                            term,
+                            (term ==null || term == undefined ? '': term),
                             this.selectedFilter,
                             0,
                             this.itemsPerPage
                         )
-                        .pipe(finalize(() => {}))
+                        .pipe(finalize(() => {
+                            this.loading = false;
+                        }))
                 )
             )
             .subscribe((resultado: any) => {
                 this.items = [...resultado.items];
-                this.changeDetector.markForCheck();
                 this.currentPage = 1;
             });
 
@@ -137,7 +135,6 @@ export class CustomSelectComponent<T> extends ControlValueAccessorDirective<T> i
                         if (resultado) {
                             this.items.push(resultado);
                             this.items = [...this.items];
-                            this.changeDetector.markForCheck();
                             this.currentPage = 1;
                         }
                     });
@@ -160,7 +157,6 @@ export class CustomSelectComponent<T> extends ControlValueAccessorDirective<T> i
                                 (u: any) => !this.items.includes(u)
                             ),
                         ];
-                        this.changeDetector.markForCheck();
                         this.currentPage += 1;
                     }
                 });
@@ -184,10 +180,8 @@ export class CustomSelectComponent<T> extends ControlValueAccessorDirective<T> i
       }
 
     public onFocus() {
-
         if (this.selectedValue !== '') {
           this.items.length = 0;
         }
-
-      }
+    }
 }

@@ -1,9 +1,8 @@
 <form action="#" (ngSubmit)="onSubmit()" [formGroup]="formProvincia">
     <div class="card border-0 p-0">
         <p-messages></p-messages>
-        <div class="col-10">
+        <div class="col-12">
             <app-custom-select
-                [customErrorMessages]="errorMessages"
                 bindLabel="descripcion"
                 label="Pais"
                 bindValue="id"
@@ -13,8 +12,15 @@
                 formControlName="paisId">
             </app-custom-select>
         </div>
-        <div
-            class="col-12 flex justify-content-end flex-wrap card-container pt-5 pr-0 pb-2">
+        <div class="col-12">
+            <app-text-input
+                formControlName="descripcion"
+                inputId="descripcion"
+                [placeholder]="'SANTIAGO DE LOS CABALLEROS'"
+                [label]="'Descripcion'">
+            </app-text-input>
+        </div>
+        <div class="col-12 flex justify-content-end flex-wrap card-container pr-3">
             <button
                 [disabled]="!formProvincia.valid"
                 pButton

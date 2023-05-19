@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnInit, forwardRef } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, Input, OnInit, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ControlValueAccessorDirective } from '@shared/directives/control-value-accessor.directive';
 

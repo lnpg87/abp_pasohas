@@ -11,13 +11,11 @@ import { NgControl } from '@angular/forms';
     selector: '[uppercase]',
     // eslint-disable-next-line @angular-eslint/no-host-metadata-property
     host: {
-        '(input)': '$event',
+        '(input)': '$event'
     },
 })
 export class UppercaseDirective {
     @Output() ngModelChange: EventEmitter<any> = new EventEmitter();
-
-    lastValue: string;
 
     constructor(private readonly control: NgControl) {}
 
