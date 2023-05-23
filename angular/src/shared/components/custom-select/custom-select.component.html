@@ -7,10 +7,11 @@
     bindLabel="{{bindLabel}}"
     [required]="isRequired"
     [virtualScroll]="true"
-    appendTo="[role='dialog']"
+    [appendTo]="appendTo"
     [formControl]="control"
     [id]="selectId"
     [clearable]="clearable"
+    [multiple]="multiSelect"
     [typeahead]="typeAhead"
     placeholder="Seleccione uno..."
     [style]="{'width': '100%'}"
@@ -28,10 +29,4 @@
         <small *ngIf="showValue" class="text-muted">{{ item[bindId] }}</small>
     </ng-template>
 </ng-select>
-
-<app-validation-errors
-    *ngIf="control.invalid && (control.dirty || control.touched)"
-    [customErrorMessages]="customErrorMessages"
-    [errors]="control.errors">
-  </app-validation-errors>
 </div>

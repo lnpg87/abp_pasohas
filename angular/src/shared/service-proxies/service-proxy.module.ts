@@ -9,7 +9,6 @@ import { MessageService } from 'primeng/api';
     providers: [
         ApiServiceProxies.PaisServiceProxy,
         ApiServiceProxies.ProvinciaServiceProxy,
-        MessageService,
         ApiServiceProxies.RoleServiceProxy,
         ApiServiceProxies.SessionServiceProxy,
         ApiServiceProxies.TenantServiceProxy,
@@ -17,7 +16,11 @@ import { MessageService } from 'primeng/api';
         ApiServiceProxies.TokenAuthServiceProxy,
         ApiServiceProxies.AccountServiceProxy,
         ApiServiceProxies.ConfigurationServiceProxy,
-        { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
-    ]
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AbpHttpInterceptor,
+            multi: true,
+        },
+    ],
 })
-export class ServiceProxyModule { }
+export class ServiceProxyModule {}

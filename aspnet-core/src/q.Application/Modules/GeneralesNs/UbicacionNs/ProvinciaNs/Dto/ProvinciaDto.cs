@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Abp.Domain.Entities;
+using q.Models.Generales.UbicacionNs.PaisNs;
 using q.Models.Generales.UbicacionNs.ProvinciaNs;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace q.Modules.GeneralesNs.UbicacionNs.ProvinciaNs.Dto
     public class ProvinciaDto : EntityDto<int>
     {
         public string Descripcion { get; set; }
-        public int PaisID { get; set; }
+        public int PaisId { get; set; }
         public string PaisDescripcion { get; set; }
     }
 }

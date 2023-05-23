@@ -1,7 +1,5 @@
 import {
-    ChangeDetectorRef,
     Directive,
-    ElementRef,
     HostListener,
     Inject,
     Injector,
@@ -32,7 +30,7 @@ import {
 export class ControlValueAccessorDirective<T>
     implements ControlValueAccessor, OnInit
 {
-    control: FormControl | undefined;
+    control: FormControl | undefined | null;
     isRequired = false;
     isUpperCase = true;
 
@@ -41,14 +39,11 @@ export class ControlValueAccessorDirective<T>
     private _onTouched!: () => T;
     private initialized = false;
 
-    constructor(@Inject(Injector) private injector: Injector) {
-        //this.initialized = true;
-    }
+    constructor(@Inject(Injector) private injector: Injector) {}
 
     ngOnInit(): void {
         this.setFormControl();
-        this.isRequired =
-            this.control?.hasValidator(Validators.required) ?? false;
+        this.isRequired = this.control?.hasValidator(Validators.required) ?? false;
     }
 
     setFormControl() {

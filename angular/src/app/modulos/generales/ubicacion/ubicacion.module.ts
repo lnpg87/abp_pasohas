@@ -7,6 +7,7 @@ import { SharedModule } from '@shared/shared.module';
 import { CrearEditarPaisComponent } from './pais/crear-editar-pais/crear-editar-pais.component';
 import { ProvinciaComponent } from './provincia/provincia.component';
 import { CrearEditarProvinciaComponent } from './provincia/crear-editar-provincia/crear-editar-provincia.component';
+import { MessageService } from 'primeng/api';
 
 
 @NgModule({

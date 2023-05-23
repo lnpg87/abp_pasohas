@@ -82,6 +82,17 @@ export class CrearEditarProvinciaComponent extends AppComponentBase implements O
     }
 
     onSubmit(){
-
+        if (this.formProvincia.valid) {
+            if (!this.config.data?.id) {
+                this._provinciaService.create(this.formProvincia.value).subscribe({
+                    next: ()=>{
+                        this._provinciaDialogRef.close();
+                    },
+                    error: err => {
+                        this._provinciaDialogRef.close();
+                    },
+                });
+            }
+        }
     }
 }

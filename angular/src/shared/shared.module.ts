@@ -39,8 +39,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { ControlValueAccessorDirective } from './directives/control-value-accessor.directive';
 import { ValidationErrorsComponent  } from './components/validation-errors/validation-errors.component';
 import { SelectComponent } from './components/select/select.component';
-import { AppRoutingModule } from '@app/app-routing.module';
 import { MessageService } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @NgModule({
     imports: [
@@ -81,6 +81,7 @@ import { MessageService } from 'primeng/api';
         SelectComponent,
         LocalizePipe,
         BusyDirective,
+        MessagesModule,
         UppercaseDirective,
         ControlValueAccessorDirective,
         EqualValidator,
@@ -97,7 +98,6 @@ import { MessageService } from 'primeng/api';
         DropdownModule,
         NgSelectModule,
         ReactiveFormsModule,
-        MessagesModule,
         ValidationErrorsComponent
     ]
 })
@@ -113,7 +113,8 @@ export class SharedModule {
                 LayoutStoreService,
                 ArrayToTreeConverterService,
                 TreeDataHelperService,
-                MessageService
+                MessageService,
+                DialogService            
             ]
         };
     }

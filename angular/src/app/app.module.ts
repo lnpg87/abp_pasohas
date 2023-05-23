@@ -1,6 +1,6 @@
 import { CommonModule, HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { SharedModule } from '@shared/shared.module';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { AppRoutingModule } from './app-routing.module';

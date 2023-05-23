@@ -36,10 +36,11 @@ export class CustomSelectComponent<T> extends ControlValueAccessorDirective<T> i
     @Input() service: any = null;
     @Input() debounceTime = 500;
     @Input() itemsPerPage = 10;
-    @Input() appendTo = 'body';
+    @Input() appendTo = "[role='dialog']";
     @Input() placeholder: string;
     @Input() showValue = true;
     @Input() selectId = '';
+    @Input() multiSelect = false;
 
     //Public Properties
     public items: any[] = [];

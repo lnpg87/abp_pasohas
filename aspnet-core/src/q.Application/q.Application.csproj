@@ -12,12 +12,6 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Shared\FilterHelper.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Shared\FilterHelper.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\q.Core\q.Core.csproj" />
   </ItemGroup>
 </Project>

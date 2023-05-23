@@ -13,7 +13,7 @@ namespace q.Modules.GeneralesNs.UbicacionNs.ProvinciaNs.Dto
         public ProvinciaMapProfile()
         {
             CreateMap<Provincia, ProvinciaDto>()
-                .ForMember(x=>x.PaisDescripcion,o=>o.MapFrom(x=>string.Concat(x.Pais.Descripcion)));
+                .ForMember(x => x.PaisDescripcion, o => o.MapFrom(x => x.Pais.Descripcion)).ReverseMap();
         }
     }
 }

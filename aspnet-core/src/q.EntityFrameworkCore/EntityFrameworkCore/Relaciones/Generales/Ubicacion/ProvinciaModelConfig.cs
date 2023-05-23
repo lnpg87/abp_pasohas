@@ -24,7 +24,7 @@ namespace q.EntityFrameworkCore.Relaciones.Generales.Ubicacion
 
                 entity.Property(x => x.Descripcion)
                 .HasConversion(converter)
-                .HasMaxLength(100)
+                .HasMaxLength(150)
                 .IsRequired();
 
                 entity.HasOne(x => x.Pais)
