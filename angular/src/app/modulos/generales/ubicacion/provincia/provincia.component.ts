@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { PaisServiceProxy, ProvinciaServiceProxy } from '@shared/service-proxies/service-proxies';
+import { PaisServiceProxy, ProvinciaDto, ProvinciaServiceProxy } from '@shared/service-proxies/service-proxies';
 import { LazyLoadEvent, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Paginator } from 'primeng/paginator';
@@ -19,8 +19,8 @@ export class ProvinciaComponent extends AppComponentBase implements OnInit {
     @ViewChild('paginator', { static: true }) paginator: Paginator;
 
     filterText: string = '';
+    paisId: string;
     ref: DynamicDialogRef;
-    statuses: any[];
 
     constructor(
         public injector: Injector,
@@ -31,14 +31,7 @@ export class ProvinciaComponent extends AppComponentBase implements OnInit {
         super(injector);
     }
     ngOnInit(): void {
-        this.statuses = [
-            { label: 'Unqualified', value: 'unqualified' },
-            { label: 'Qualified', value: 'qualified' },
-            { label: 'New', value: 'new' },
-            { label: 'Negotiation', value: 'negotiation' },
-            { label: 'Renewal', value: 'renewal' },
-            { label: 'Proposal', value: 'proposal' }
-        ];
+
     }
 
     public getAllRecords(event?: LazyLoadEvent): void {
@@ -53,7 +46,7 @@ export class ProvinciaComponent extends AppComponentBase implements OnInit {
             .getAll(
                 this.primengTableHelper.getSorting(this.dataTable),
                 this.filterText,
-                '',
+                this.paisId,
                 this.primengTableHelper.getSkipCount(this.paginator, event),
                 this.primengTableHelper.getMaxResultCount(this.paginator, event)
             )
@@ -81,12 +74,39 @@ export class ProvinciaComponent extends AppComponentBase implements OnInit {
         });
     }
 
+    OnEditProvincia(provincia: ProvinciaDto) {
+        this.ref = this._dialogService.open(CrearEditarProvinciaComponent, {
+            header: 'Provincia Pais - ' + provincia.descripcion,
+            width: '35%',
+            data: {
+                id: provincia.id,
+            },
+            contentStyle: { 'max-height': '500px', overflow: 'auto' },
+            baseZIndex: 10000,
+        });
+
+        this.ref.onDestroy.subscribe(() => {
+            this.filterText = '';
+            this.getAllRecords();
+        });
+    }
+
     onClear(event?: LazyLoadEvent) {
         this.filterText = '';
         this.getAllRecords(event);
     }
 
-    onChangePais(value:string){
-        console.log(value);
+    onChangePais(event: any){
+        if(event.id){
+        this.paisId = 'PaisId=' + event.id;
+        this.getAllRecords(event);
+        }
     }
+
+    onInputChange(event: any){
+      if(!this.filterText){
+        this.getAllRecords(event);     
+      }
+    }
+
 }

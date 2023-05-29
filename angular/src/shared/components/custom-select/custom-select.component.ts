@@ -1,7 +1,9 @@
-import { ChangeDetectorRef, Component, Inject, Injector, Input, OnInit, ViewChild, forwardRef } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { ControlValueAccessorDirective } from '@shared/directives/control-value-accessor.directive';
+import { PaisDto } from '@shared/service-proxies/service-proxies';
 import {
     Subject,
     debounceTime,
@@ -23,7 +25,12 @@ import {
         },
     ],
 })
-export class CustomSelectComponent<T> extends ControlValueAccessorDirective<T> implements OnInit{
+export class CustomSelectComponent<T>
+    extends ControlValueAccessorDirective<T>
+    implements OnInit
+{
+    //Output Properties
+    @Output() valuedChanged = new EventEmitter();
 
     //Input Properties
     @Input() bindId: string | number = 'id';
@@ -36,7 +43,7 @@ export class CustomSelectComponent<T> extends ControlValueAccessorDirective<T> i
     @Input() service: any = null;
     @Input() debounceTime = 500;
     @Input() itemsPerPage = 10;
-    @Input() appendTo = "[role='dialog']";
+    @Input() appendTo = 'body';
     @Input() placeholder: string;
     @Input() showValue = true;
     @Input() selectId = '';
@@ -47,7 +54,6 @@ export class CustomSelectComponent<T> extends ControlValueAccessorDirective<T> i
     public typeAhead = new Subject<string>();
     public selectedFilter = '';
     public loading = false;
-
 
     //Private Properties
     private currentPage = 1;
@@ -62,13 +68,12 @@ export class CustomSelectComponent<T> extends ControlValueAccessorDirective<T> i
         this.selectedFilter = valor;
     }
 
-   constructor(injector: Injector) {
-       super(injector);
-   }
+    constructor(injector: Injector) {
+        super(injector);
+    }
 
     ngOnInit(): void {
         super.ngOnInit();
-
 
         if (this.appendTo === 'modal') {
             this.appendTo = undefined;
@@ -81,6 +86,14 @@ export class CustomSelectComponent<T> extends ControlValueAccessorDirective<T> i
         if (this.options.length === 0 && this.service) {
             this.loadOptions();
         }
+            this.control.valueChanges.subscribe((newValue) => {
+                if(!this.selectedValue){
+                console.log(newValue,this.selectedValue);
+                this.selectedValue = newValue;
+                this.loadMore();
+                }
+            });
+        
     }
 
     public loadOptions(): void {
@@ -104,14 +117,16 @@ export class CustomSelectComponent<T> extends ControlValueAccessorDirective<T> i
                     this.service
                         .getAll(
                             '',
-                            (term ==null || term == undefined ? '': term),
+                            term == null || term == undefined ? '' : term,
                             this.selectedFilter,
                             0,
                             this.itemsPerPage
                         )
-                        .pipe(finalize(() => {
-                            this.loading = false;
-                        }))
+                        .pipe(
+                            finalize(() => {
+                                this.loading = false;
+                            })
+                        )
                 )
             )
             .subscribe((resultado: any) => {
@@ -123,12 +138,10 @@ export class CustomSelectComponent<T> extends ControlValueAccessorDirective<T> i
     }
 
     public loadMore(): void {
-        if (+this.selectedValue > 0) {
+        if (this.selectedValue) {
             this.loading = true;
-            if (
-                !this.items.some((x) => x.id === this.selectedValue) &&
-                this.items.length > 0
-            ) {
+            console.log(this.items);
+            if (!this.items.some((x) => x.id === this.selectedValue) && this.items.length > 0) {
                 this.service
                     .get(this.selectedValue)
                     .pipe(finalize(() => {}))
@@ -140,6 +153,9 @@ export class CustomSelectComponent<T> extends ControlValueAccessorDirective<T> i
                         }
                     });
             }
+
+            this.control.setValue(this.selectedValue);
+
         } else {
             this.service
                 .getAll(
@@ -176,13 +192,17 @@ export class CustomSelectComponent<T> extends ControlValueAccessorDirective<T> i
 
     public onScrollToEnd(): void {
         if (this.options.length === 0) {
-          this.loadMore();
+            this.loadMore();
         }
-      }
+    }
 
     public onFocus() {
         if (this.selectedValue !== '') {
-          this.items.length = 0;
+            this.items.length = 0;
         }
+    }
+
+    public onChange(event: any) {
+        this.valuedChanged.emit({ id: event?.id, event: event });
     }
 }

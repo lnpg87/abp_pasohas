@@ -1,31 +1,37 @@
-import { Component, Injector, OnInit, SkipSelf, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+    Component,
+    Injector,
+    OnInit,
+    SkipSelf,
+    ViewChild,
+} from '@angular/core';
+import {
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    Validators,
+} from '@angular/forms';
 import { AppComponentBase } from '@shared/app-component-base';
-import { PaisDto, PaisServiceProxy, ProvinciaDto, ProvinciaServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+    PaisDto,
+    PaisServiceProxy,
+    ProvinciaDto,
+    ProvinciaServiceProxy,
+} from '@shared/service-proxies/service-proxies';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { finalize } from 'rxjs';
 
 @Component({
-  selector: 'app-crear-editar-provincia',
-  templateUrl: './crear-editar-provincia.component.html',
-  styleUrls: ['./crear-editar-provincia.component.scss']
+    selector: 'app-crear-editar-provincia',
+    templateUrl: './crear-editar-provincia.component.html',
+    styleUrls: ['./crear-editar-provincia.component.scss'],
 })
-export class CrearEditarProvinciaComponent extends AppComponentBase implements OnInit  {
-    errorMessages = { required: 'The name field is required' };
-    testControl = new FormControl('MyDefaultValue', Validators.required);
-
-    isCitiesControlVisible = true;
-    cities: any[] = [
-        { id: 1, name: 'Vilnius' },
-        { id: 2, name: 'Kaunas' },
-        { id: 3, name: 'Pavilnys (Disabled)', disabled: true },
-        { id: 4, name: 'Pabradė' },
-    ];
-
-    formProvincia : FormGroup;
+export class CrearEditarProvinciaComponent extends AppComponentBase implements OnInit{
+    formProvincia: FormGroup;
 
     provinciaDto: ProvinciaDto;
-    paisDto:PaisDto[];
+    paisDto: PaisDto[];
 
     constructor(
         public injector: Injector,
@@ -33,29 +39,32 @@ export class CrearEditarProvinciaComponent extends AppComponentBase implements O
         private config: DynamicDialogConfig,
         public fb: FormBuilder,
         private _provinciaDialogRef: DynamicDialogRef,
-        public _paisService: PaisServiceProxy,
-        private messageService: MessageService
+        public _paisService: PaisServiceProxy
     ) {
         super(injector);
-
-        this.initialize();
     }
 
     ngOnInit(): void {
-       // this.initialize();
+        this.initialize();
 
         this.loadListPais();
 
         if (this.config.data?.id) {
-
+            this._provinciaService
+                .get(this.config.data.id)
+                .pipe(finalize(() => {}))
+                .subscribe((result) => {
+                    console.log(result);
+                    this.formProvincia.patchValue(result);
+                });
         }
     }
 
     initialize(): void {
-
         this.formProvincia = this.fb.group(
             {
-                descripcion: ['',
+                descripcion: [
+                    '',
                     {
                         validators: [
                             Validators.required,
@@ -65,11 +74,12 @@ export class CrearEditarProvinciaComponent extends AppComponentBase implements O
                         ],
                     },
                 ],
-                paisId: ['',
+                paisId: [
+                    '',
                     {
                         validators: [Validators.required],
-                    }
-                ]
+                    },
+                ],
             },
             {
                 updateOn: 'blur',
@@ -77,21 +87,21 @@ export class CrearEditarProvinciaComponent extends AppComponentBase implements O
         );
     }
 
-    loadListPais(){
+    loadListPais() {}
 
-    }
-
-    onSubmit(){
+    onSubmit() {
         if (this.formProvincia.valid) {
             if (!this.config.data?.id) {
-                this._provinciaService.create(this.formProvincia.value).subscribe({
-                    next: ()=>{
-                        this._provinciaDialogRef.close();
-                    },
-                    error: err => {
-                        this._provinciaDialogRef.close();
-                    },
-                });
+                this._provinciaService
+                    .create(this.formProvincia.value)
+                    .subscribe({
+                        next: () => {
+                            this._provinciaDialogRef.close();
+                        },
+                        error: (err) => {
+                            this._provinciaDialogRef.close();
+                        },
+                    });
             }
         }
     }

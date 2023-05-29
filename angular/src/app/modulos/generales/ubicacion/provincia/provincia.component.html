@@ -29,23 +29,6 @@
                             icon="pi pi-plus"
                             (click)="OnCreateProvincia()"
                         ></button>
-                        <span class="p-input-icon-left ml-auto"
-                            ><i class="pi pi-search"></i>
-                            <input
-                                pInputText
-                                type="text"
-                                (keyup.enter)="getAllRecords()"
-                                placeholder="Buscar..."
-                                [(ngModel)]="filterText"
-                            />
-                            <button
-                                pButton
-                                class="p-button-outlined"
-                                style="margin-left: 0.2rem"
-                                icon="pi pi-filter-slash"
-                                (click)="onClear($event)"
-                            ></button>
-                        </span>
                     </div>
                 </ng-template>
 
@@ -68,7 +51,7 @@
                         <th>
                             <app-custom-select
                                 bindLabel="descripcion"
-                                (change)="onChangePais($event.target.value)"
+                                (valuedChanged)="onChangePais($event)"
                                 label="Pais"
                                 bindValue="id"
                                 [appendTo]="'body'"
@@ -76,9 +59,30 @@
                                 multiple="false"
                                 selectId="paisId"
                                 [showLabel]="false"
-                                [showValue]="false">
+                                [showValue]="false"
+                            >
                             </app-custom-select>
                         </th>
+                        <th>
+                            <input
+                                #search
+                                pInputText
+                                uppercase
+                                type="text"
+                                [style]="{'width': '95%'}"
+                                (keyup.enter)="getAllRecords($event)"
+                                (input)="onInputChange($event)"
+                                placeholder="Buscar..."
+                                [(ngModel)]="filterText"
+                            />
+                            <button
+                                [style]="{'display': !filterText ? 'none' : 'inline-flex'}"
+                                type="button"
+                                class="p-column-filter-clear-button p-link ng-tns-c23-1 ng-star-inserted">
+                                <span class="pi pi-filter-slash ng-tns-c23-1"></span>
+                            </button>
+                        </th>
+                        <th></th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
@@ -98,7 +102,7 @@
                                 type="button"
                                 icon="pi pi-pencil"
                                 class="p-button-rounded p-button-text"
-                                (click)="OnEditPais(record)"
+                                (click)="OnEditProvincia(record)"
                             ></button>
                         </td>
                     </tr>
