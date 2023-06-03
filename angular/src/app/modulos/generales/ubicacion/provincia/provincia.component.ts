@@ -13,8 +13,8 @@ import { CrearEditarProvinciaComponent } from './crear-editar-provincia/crear-ed
     templateUrl: './provincia.component.html',
     styleUrls: ['./provincia.component.scss']
 })
-export class ProvinciaComponent extends AppComponentBase implements OnInit {
-    
+export class ProvinciaComponent extends AppComponentBase {
+
     @ViewChild('dataTable', { static: true }) dataTable: Table;
     @ViewChild('paginator', { static: true }) paginator: Paginator;
 
@@ -30,10 +30,6 @@ export class ProvinciaComponent extends AppComponentBase implements OnInit {
     ) {
         super(injector);
     }
-    ngOnInit(): void {
-
-    }
-
     public getAllRecords(event?: LazyLoadEvent): void {
         this.primengTableHelper.showLoadingIndicator();
 
@@ -105,7 +101,7 @@ export class ProvinciaComponent extends AppComponentBase implements OnInit {
 
     onInputChange(event: any){
       if(!this.filterText){
-        this.getAllRecords(event);     
+        this.getAllRecords(event);
       }
     }
 

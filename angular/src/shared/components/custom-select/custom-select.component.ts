@@ -1,9 +1,7 @@
-import { ChangeDetectorRef, Component, Inject, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
+import { Component, Injector, Input, OnInit, Output, forwardRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { NgSelectComponent } from '@ng-select/ng-select';
 import { ControlValueAccessorDirective } from '@shared/directives/control-value-accessor.directive';
-import { PaisDto } from '@shared/service-proxies/service-proxies';
 import {
     Subject,
     debounceTime,
@@ -25,10 +23,7 @@ import {
         },
     ],
 })
-export class CustomSelectComponent<T>
-    extends ControlValueAccessorDirective<T>
-    implements OnInit
-{
+export class CustomSelectComponent<T> extends ControlValueAccessorDirective<T> implements OnInit {
     //Output Properties
     @Output() valuedChanged = new EventEmitter();
 
@@ -86,14 +81,13 @@ export class CustomSelectComponent<T>
         if (this.options.length === 0 && this.service) {
             this.loadOptions();
         }
-            this.control.valueChanges.subscribe((newValue) => {
-                if(!this.selectedValue){
-                console.log(newValue,this.selectedValue);
-                this.selectedValue = newValue;
-                this.loadMore();
-                }
-            });
-        
+
+        this.control.valueChanges.subscribe((newValue) => {
+            if(!this.selectedValue){
+            this.selectedValue = newValue;
+            this.loadMore();
+            }
+        });
     }
 
     public loadOptions(): void {
@@ -138,47 +132,37 @@ export class CustomSelectComponent<T>
     }
 
     public loadMore(): void {
-        if (this.selectedValue) {
-            this.loading = true;
-            console.log(this.items);
-            if (!this.items.some((x) => x.id === this.selectedValue) && this.items.length > 0) {
-                this.service
-                    .get(this.selectedValue)
-                    .pipe(finalize(() => {}))
-                    .subscribe((resultado: any) => {
-                        if (resultado) {
-                            this.items.push(resultado);
-                            this.items = [...this.items];
-                            this.currentPage = 1;
-                        }
-                    });
-            }
-
-            this.control.setValue(this.selectedValue);
-
-        } else {
+        this.loading = true;
+        if (this.service) {
             this.service
-                .getAll(
-                    '',
-                    '',
-                    this.selectedFilter,
-                    this.currentPage * this.itemsPerPage,
-                    this.itemsPerPage
-                )
+                .getAll('', '', this.selectedFilter, this.currentPage * this.itemsPerPage, this.itemsPerPage)
                 .pipe(finalize(() => {}))
                 .subscribe((resultado: any) => {
                     if (resultado.items.length > 0) {
-                        this.items = [
-                            ...this.items,
-                            ...resultado.items.filter(
-                                (u: any) => !this.items.includes(u)
-                            ),
-                        ];
+                        this.items = [...this.items, ...resultado.items.filter((u: any) => !this.items.includes(u))];
+                       // this.changeDetector.markForCheck();
                         this.currentPage += 1;
+                        this.loading = false;
+                    }
+
+                    if (this.selectedValue) {
+                        if (!this.items.some((x) => x.id === this.selectedValue) && this.items.length > 0) {
+                            this.service
+                                .get(this.selectedValue)
+                                .pipe(finalize(() => {}))
+                                .subscribe((resultado: any) => {
+                                    if (resultado) {
+                                        this.items.push(resultado);
+                                        this.items = [...this.items];
+                                        //this.changeDetector.markForCheck();
+                                        this.currentPage = 1;
+                                        this.loading = false;
+                                    }
+                                });
+                        }
                     }
                 });
         }
-        this.loading = false;
     }
 
     public openSelect(): void {
@@ -206,3 +190,4 @@ export class CustomSelectComponent<T>
         this.valuedChanged.emit({ id: event?.id, event: event });
     }
 }
+
